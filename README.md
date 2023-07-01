@@ -8,10 +8,11 @@ Latest runnable version can be found at https://github.com/brianpipa/epubrenamer
 
 ## Running
 Once you have built it, run it like so:  
->java -jar target/epubrenamer-0.0.1-SNAPSHOT-jar-with-dependencies.jar
-	EpubRenamer https://github.com/brianpipa/epubrenamer
-	Missing required option: f
-	usage:
+```
+> java -jar target/epubrenamer-0.0.1-SNAPSHOT-jar-with-dependencies.jar  
+EpubRenamer https://github.com/brianpipa/epubrenamer  
+Missing required option: f  
+usage:
 	 -af,--authorFirst             Filename will have author then title.
 	                               Default is title then author
 	 -alnf,--authorLastNameFirst   Author name is lastname then firstname.
@@ -20,8 +21,10 @@ Once you have built it, run it like so:
 	 -ps,--pieceSeparator <arg>    characters to separate title from author.
 	                               Default is -by-
 	 -ws,--wordSeparator <arg>     Character used to separate words, default
-    
-You must specify the folder to look for epubs. Everyhtign else is optional.
+```    
+You must specify the folder to look for epubs. Everything else is optional.
 
-An example run would be
+An valid run would look like:
+```
 >java -jar target/epubrenamer-0.0.1-SNAPSHOT-jar-with-dependencies.jar -f "/media/bpipa/250GBInternal/Shared ebooks/Brian/read"
+```
