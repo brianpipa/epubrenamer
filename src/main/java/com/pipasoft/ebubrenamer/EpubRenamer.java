@@ -16,8 +16,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.sf.jazzlib.ZipException;
 import net.sf.jazzlib.ZipFile;
@@ -48,11 +46,7 @@ public class EpubRenamer {
 		System.out.println("pieceSeparator="+pieceSeparator);
 		System.out.println("authorLastnameFirst="+authorLastnameFirst);
 		System.out.println("authorFirst="+authorFirst);
-		System.out.println("-------------------------");
-		//System.exit(0);
-		
-		Logger log = LoggerFactory.getLogger(EpubRenamer.class);
-		log.debug("TESTING");
+		System.out.println("-------------------------");	
 		
 		int renamedCount = 0;
 		try {
@@ -117,12 +111,10 @@ public class EpubRenamer {
 		}
 
 		List<String> result;
-
 		try (Stream<Path> walk = Files.walk(path)) {
 			result = walk.filter(p -> !Files.isDirectory(p)).map(p -> p.toString())
 					.filter(f -> f.toLowerCase().endsWith("epub")).collect(Collectors.toList());
 		}
-
 		return result;
 	}
 
@@ -187,8 +179,6 @@ public class EpubRenamer {
         }
         if (cmd.hasOption("af")) {
         	authorFirst = true;
-        }
-        
+        }        
 	}
-
 }
