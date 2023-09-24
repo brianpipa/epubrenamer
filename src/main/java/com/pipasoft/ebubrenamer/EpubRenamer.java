@@ -35,18 +35,20 @@ public class EpubRenamer {
 	private static boolean authorFirst = false;
 	private static String directory;
 	
+	private static final String LINE = "-------------------------";
+	
 	
 	public static void main(String[] args) {
 		System.out.println("EpubRenamer https://github.com/brianpipa/epubrenamer");
 		
 		parseOptions(args);
-		System.out.println("-------------------------");
+		System.out.println(LINE);
 		System.out.println("directory="+directory);
 		System.out.println("wordSeparator="+wordSeparator);
 		System.out.println("pieceSeparator="+pieceSeparator);
 		System.out.println("authorLastnameFirst="+authorLastnameFirst);
 		System.out.println("authorFirst="+authorFirst);
-		System.out.println("-------------------------");	
+		System.out.println(LINE);	
 		
 		int renamedCount = 0;
 		try {
@@ -57,11 +59,12 @@ public class EpubRenamer {
 				Book book = getBook(epubFile);
 				List<Author> authors = book.getMetadata().getAuthors();
 				String authorString = getAuthorString(authors);
-				String renameString;;
+				String titleString = converStringToValidFilename(book.getMetadata().getFirstTitle());
+				String renameString;
 				if (authorFirst) {
-					renameString = authorString +pieceSeparator+ book.getMetadata().getFirstTitle() ;					
+					renameString = authorString +pieceSeparator+ titleString ;					
 				} else {
-					renameString = book.getMetadata().getFirstTitle() + pieceSeparator + authorString;
+					renameString = titleString + pieceSeparator + authorString;
 				}
 				renameString = renameString.replace(" ", wordSeparator);
 				//System.out.println("renaming "+epubFile +" to ["+renameString+"]");
@@ -70,7 +73,7 @@ public class EpubRenamer {
 				if (Files.exists(source.resolveSibling(renameString + ".epub"))) {
 					//System.err.println("SKIPPING "+renameString +"-- already exists");
 				} else {
-					System.out.println("renaming to ["+renameString+".epub] from "+epubFile);
+					System.out.println("renaming to "+renameString+".epub from "+epubFile);
 					Files.move(source, source.resolveSibling(renameString + ".epub"));
 					renamedCount++;
 				}				
@@ -78,7 +81,7 @@ public class EpubRenamer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		System.out.println(LINE);
 		System.out.println(renamedCount+" epubs renamed");
 	}
 
@@ -101,11 +104,10 @@ public class EpubRenamer {
 			
 			count++;
 		}
-		return sb.toString();
+		return converStringToValidFilename(sb.toString());
 	}
 
 	public static List<String> findFiles(Path path) throws IOException {
-
 		if (!Files.isDirectory(path)) {
 			throw new IllegalArgumentException("Path must be a directory!");
 		}
@@ -119,6 +121,19 @@ public class EpubRenamer {
 	}
 
 	/**
+	 * converts a string to a string that can be used in a filename
+	 * @param input string
+	 * @return a string that can be used in a filename
+	 */
+	private static String converStringToValidFilename(String input) {
+		//linux
+		String temp = input.replaceAll("/", " ");
+		//windows
+		temp = temp.replaceAll("\\\\", " ");
+		return temp;
+	}	
+	
+	/**
 	 * parses command line options
 	 * 
 	 * @param args commandline args
@@ -126,8 +141,8 @@ public class EpubRenamer {
 	private static void parseOptions(String[] args) {
         Options options = new Options();
 
-        Option f = new Option("f", "folder", true, "epub folder");
-        f.setRequired(true);
+        Option f = new Option("f", "folder", true, "epub folder, defaults to current directory if not specified");
+        f.setRequired(false);
         options.addOption(f);
 
         Option ws = new Option("ws", "wordSeparator", true, "Character used to separate words, default is "+DEFAULT_WORD_SEPARATOR);
@@ -164,6 +179,8 @@ public class EpubRenamer {
         		System.err.println(directory+" does not exist or is not a folder");
         		System.exit(1);
         	}        	
+        } else {
+        	directory = "."+File.separator;
         }
         
         if (cmd.hasOption("ws")) {
@@ -180,5 +197,5 @@ public class EpubRenamer {
         if (cmd.hasOption("af")) {
         	authorFirst = true;
         }        
-	}
+	}	
 }
