@@ -7,24 +7,22 @@ Latest runnable version can be found at https://github.com/brianpipa/epubrenamer
 `mvn clean package` to build it.
 
 ## Running
-Once you have built it, run it like so:  
+Once you have built it, run it like so to see the options:  
 ```
-> java -jar target/epubrenamer-0.0.1-SNAPSHOT-jar-with-dependencies.jar  
+> java -jar PATH/TO/epubrenamer.jar  --help
 EpubRenamer https://github.com/brianpipa/epubrenamer  
-Missing required option: f  
 usage:
 	 -af,--authorFirst             Filename will have author then title.
 	                               Default is title then author
 	 -alnf,--authorLastNameFirst   Author name is lastname then firstname.
 	                               Default is firstName lastName
-	 -f,--folder <arg>             epub folder
+	 -f,--folder <arg>             epub folder, defaults to current didirectory if not specified
 	 -ps,--pieceSeparator <arg>    characters to separate title from author.
 	                               Default is -by-
 	 -ws,--wordSeparator <arg>     Character used to separate words, default
 ```    
-You must specify the folder to look for epubs. Everything else is optional.
 
-An valid run would look like:
+A valid run might look like:
 ```
->java -jar target/epubrenamer-0.0.1-SNAPSHOT-jar-with-dependencies.jar -f "/media/bpipa/250GBInternal/Shared ebooks/Brian/read"
+>java -jar target/epubrenamer-1.0-with-dependencies.jar -f "path/to/epub/folder"
 ```
