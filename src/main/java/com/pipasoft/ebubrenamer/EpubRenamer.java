@@ -67,13 +67,15 @@ public class EpubRenamer {
 					renameString = titleString + pieceSeparator + authorString;
 				}
 				renameString = renameString.replace(" ", wordSeparator);
-				//System.out.println("renaming "+epubFile +" to ["+renameString+"]");
 
 				Path source = Paths.get(epubFile);
 				if (Files.exists(source.resolveSibling(renameString + ".epub"))) {
 					//System.err.println("SKIPPING "+renameString +"-- already exists");
-				} else {
-					System.out.println("renaming to "+renameString+".epub from "+epubFile);
+				} else {					
+					System.out.println("RENAMING");
+					System.out.println("  FROM: "+source.getFileName());
+					System.out.println("  TO:   "+renameString+".epub");
+					
 					Files.move(source, source.resolveSibling(renameString + ".epub"));
 					renamedCount++;
 				}				
@@ -97,9 +99,9 @@ public class EpubRenamer {
 				sb.append(" and ");
 			}
 			if (authorLastnameFirst) {
-				sb.append(author.getLastname() + "," + author.getFirstname());
+				sb.append(author.getLastname().trim() + "," + author.getFirstname().trim());
 			} else {
-				sb.append(author.getFirstname() + " " + author.getLastname());	
+				sb.append(author.getFirstname().trim() + " " + author.getLastname().trim());	
 			}
 			
 			count++;
@@ -130,7 +132,9 @@ public class EpubRenamer {
 		String temp = input.replaceAll("/", " ");
 		//windows
 		temp = temp.replaceAll("\\\\", " ");
-		return temp;
+		temp = temp.replaceAll(": ", "-");
+		temp = temp.replaceAll(":", "-");
+		return temp.trim();
 	}	
 	
 	/**
