@@ -23,6 +23,12 @@ import nl.siegmann.epublib.domain.Author;
 import nl.siegmann.epublib.domain.Book;
 import nl.siegmann.epublib.epub.EpubReader;
 
+/**
+ * The one class that does epub renaming
+ * 
+ * @author bpipa
+ * https://github.com/brianpipa/epubrenamer
+ */
 public class EpubRenamer {
 
 	private static final String DEFAULT_WORD_SEPARATOR = "_";
@@ -37,11 +43,16 @@ public class EpubRenamer {
 	
 	private static final String LINE = "-------------------------";
 	
-	
+	/**
+	 * main entry point into the application
+	 * 
+	 * @param args commandline args
+	 */
 	public static void main(String[] args) {
-		System.out.println("EpubRenamer https://github.com/brianpipa/epubrenamer");
+		System.out.println("EpubRenamer: https://github.com/brianpipa/epubrenamer");
 		
 		parseOptions(args);
+		//print out the options being used
 		System.out.println(LINE);
 		System.out.println("directory="+directory);
 		System.out.println("wordSeparator="+wordSeparator);
@@ -52,9 +63,10 @@ public class EpubRenamer {
 		
 		int renamedCount = 0;
 		try {
-			List<String> fileList = findFiles(Paths.get(directory));
-
+			List<String> fileList = findEpubFiles(Paths.get(directory));
 			System.out.println("Found "+fileList.size()+" epubs in "+directory);
+			
+			//loop through each epub
 			for (String epubFile : fileList) {
 				Book book = getBook(epubFile);
 				List<Author> authors = book.getMetadata().getAuthors();
@@ -69,9 +81,8 @@ public class EpubRenamer {
 				renameString = renameString.replace(" ", wordSeparator);
 
 				Path source = Paths.get(epubFile);
-				if (Files.exists(source.resolveSibling(renameString + ".epub"))) {
-					//System.err.println("SKIPPING "+renameString +"-- already exists");
-				} else {					
+				//only rename it if the destination doesn't already exist
+				if (! Files.exists(source.resolveSibling(renameString + ".epub"))) {								
 					System.out.println("RENAMING");
 					System.out.println("  FROM: "+source.getFileName());
 					System.out.println("  TO:   "+renameString+".epub");
@@ -87,10 +98,24 @@ public class EpubRenamer {
 		System.out.println(renamedCount+" epubs renamed");
 	}
 
+	/**
+	 * given a String path to an epub, returns a book object for  it
+	 * 
+	 * @param path path to an epub
+	 * @return a Book object representing the epub
+	 * @throws ZipException
+	 * @throws IOException
+	 */
 	private static Book getBook(String path) throws ZipException, IOException {
 		return new EpubReader().readEpubLazy(new ZipFile(path), "UTF-8");
 	}
 
+	/**
+	 * create a single author string from a list of authors
+	 * 
+	 * @param authors a list of authors
+	 * @return a string representing all the authors
+	 */
 	private static String getAuthorString(List<Author> authors) {
 		StringBuilder sb = new StringBuilder();
 		int count = 1;
@@ -103,13 +128,19 @@ public class EpubRenamer {
 			} else {
 				sb.append(author.getFirstname().trim() + " " + author.getLastname().trim());	
 			}
-			
 			count++;
 		}
 		return converStringToValidFilename(sb.toString());
 	}
 
-	public static List<String> findFiles(Path path) throws IOException {
+	/**
+	 * Given a directory, finds all the epub files
+	 * 
+	 * @param path the folder path to look in for epub files
+	 * @return a List of epub paths
+	 * @throws IOException
+	 */
+	public static List<String> findEpubFiles(Path path) throws IOException {
 		if (!Files.isDirectory(path)) {
 			throw new IllegalArgumentException("Path must be a directory!");
 		}
@@ -123,7 +154,9 @@ public class EpubRenamer {
 	}
 
 	/**
-	 * converts a string to a string that can be used in a filename
+	 * converts a string to a string that can be used in a filename, 
+	 * replacing "bad" characters
+	 * 
 	 * @param input string
 	 * @return a string that can be used in a filename
 	 */
