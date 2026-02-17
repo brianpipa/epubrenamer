@@ -12,14 +12,11 @@ Once you have built it, run it like so to see the options:
 > java -jar PATH/TO/epubrenamer.jar  --help
 EpubRenamer https://github.com/brianpipa/epubrenamer  
 usage:
-	 -af,--authorFirst             Filename will have author then title.
-	                               Default is title then author
-	 -alnf,--authorLastNameFirst   Author name is lastname then firstname.
-	                               Default is firstName lastName
+	 -af,--authorFirst             Filename will have author then title. Default is title then author
+	 -alnf,--authorLastNameFirst   Author name is lastname then firstname. Default is firstName lastName
 	 -f,--folder <arg>             epub folder, defaults to current didirectory if not specified
-	 -ps,--pieceSeparator <arg>    characters to separate title from author.
-	                               Default is -by-
-	 -ws,--wordSeparator <arg>     Character used to separate words, default
+	 -ps,--pieceSeparator <arg>    characters to separate title from author. Default is -by-
+	 -ws,--wordSeparator <arg>     Character used to separate words, default is _ (underscore)
 ```    
 
 A valid run might look like:
